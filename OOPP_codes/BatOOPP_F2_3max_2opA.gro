@@ -1,0 +1,269 @@
+include gro
+set ( "dt", 0.1 );
+set ( "population_max", 10000 );
+
+t := 0;
+t1 := 0;
+n := 0;
+
+//Cellsignals settings
+set ("signals", 1.0); //0.0: off, 1.0: on
+set ("signals_draw", 1.0);
+grid("continuous", "gro_original", 10, 10, 8);
+
+echo := s_signal([kdiff := 1.0, kdeg := 0.3]);
+
+//Circuitos de echo
+
+
+//PRIMER OPERADOR
+
+genes([	name := "OP1a",
+		proteins := {"op1a", "LuxI", "Rel1a", "iam1a"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+genes([	name := "OP1b",
+		proteins := {"op1b", "LuxI", "Rel1b", "iam1b"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+genes([	name := "OP1c",
+		proteins := {"op1c", "LuxI", "Rel1c", "iam1c"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+
+//SEGUNDO OPERADOR
+
+genes([	name := "OP2a",
+		proteins := {"op2a", "LuxI", "Rel2a", "iam2a"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+genes([	name := "OP2b",
+		proteins := {"op2b", "LuxI", "Rel2b", "iam2b"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+genes([	name := "OP2c",
+		proteins := {"op2c", "LuxI", "Rel2c", "iam2c"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+
+//TERCER OPERADOR
+
+genes([	name := "OP3a",
+		proteins := {"op3a", "LuxI", "Rel3a", "iam3a"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+genes([	name := "OP3b",
+		proteins := {"op3b", "LuxI", "Rel3b", "iam3b"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+genes([	name := "OP3c",
+		proteins := {"op3c", "LuxI", "Rel3c", "iam3c"},
+		promoter := [function := "TRUE"],
+		prot_act_times := [times := {30.0, 30.0, 20.0, 0.0}, variabilities := {8.0, 8.0, 6.0, 0.0}],
+		prot_deg_times := [times := {10.0, 10.0, 6.0, 0.0}, variabilities := {2.0, 2.0, 1.0, 0.0}]
+	]);
+
+//lux para qs, rel conjugacion y iam identificacion
+
+//Circuitos de regulacion de crecimiento
+
+genes([	name := "Increase",
+		proteins := {"up"},
+		promoter := [function := "YES", transcription_factors := {"inup"}],
+		prot_act_times := [times := {0.1}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.1}, variabilities := {0.0}]
+	]);
+
+//Circuitos de conteo
+
+//CANTIDAD OPTIMA POR COLUMNAS
+//DOS OPERADORES PARA LA PRIMERA COLUMNA
+genes([	name := "group1ab",
+		proteins := {"siop1"},
+		promoter := [function := "AND", transcription_factors := {"iam1a","iam1b","-iam1c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);  
+
+genes([	name := "group1bc",
+		proteins := {"siop1"},
+		promoter := [function := "AND", transcription_factors := {"-iam1a","iam1b","iam1c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);  
+
+genes([	name := "group1ac",
+		proteins := {"siop1"},
+		promoter := [function := "AND", transcription_factors := {"iam1a","-iam1b","iam1c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);
+
+//UN OPERADOR PARA LA SEGUNDA COLUMNA
+genes([	name := "group2a",
+		proteins := {"siop2"},
+		promoter := [function := "AND", transcription_factors := {"iam2a","-iam2b","-iam2c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);  
+
+genes([	name := "group2b",
+		proteins := {"siop2"},
+		promoter := [function := "AND", transcription_factors := {"-iam2a","iam2b","-iam2c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);  
+
+genes([	name := "group2c",
+		proteins := {"siop2"},
+		promoter := [function := "AND", transcription_factors := {"-iam2a","-iam2b","iam2c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);
+
+//DOS OPERADORES PARA LA TERCERA COLUMNA
+genes([	name := "group3ab",
+		proteins := {"siop3"},
+		promoter := [function := "AND", transcription_factors := {"iam3a","iam3b","-iam3c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);  
+
+genes([	name := "group3bc",
+		proteins := {"siop3"},
+		promoter := [function := "AND", transcription_factors := {"-iam3a","iam3b","iam3c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);  
+
+genes([	name := "group3ac",
+		proteins := {"siop3"},
+		promoter := [function := "AND", transcription_factors := {"iam3a","-iam3b","iam3c"}],
+		prot_act_times := [times := {0.0}, variabilities := {0.0}],
+		prot_deg_times := [times := {0.0}, variabilities := {0.0}]
+	]);
+
+/*MATRICES OPTIMAS
+COMBINACIONES DE COLUMNAS ANTERIORES */
+
+
+
+plasmids_genes([ p1a := {"OP1a","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p1b := {"OP1b","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p1c := {"OP1c","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p2a := {"OP2a","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p2b := {"OP2b","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p2c := {"OP2c","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p3a := {"OP3a","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p3b := {"OP3b","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"},
+				 p3c := {"OP3c","Increase","group1ab","group1bc","group1ac","group2a","group2b","group2c","group3ac","group3bc","group3ab"}
+				 ]);
+
+//Actions
+
+action({"Rel1a"}, "conjugate", {"p1a","0.2"});
+action({"Rel2a"}, "conjugate", {"p2a","0.2"});
+action({"Rel3a"}, "conjugate", {"p3a","0.2"});
+action({"Rel1b"}, "conjugate", {"p1b","0.2"});
+action({"Rel2b"}, "conjugate", {"p2b","0.2"});
+action({"Rel3b"}, "conjugate", {"p3b","0.2"});
+action({"Rel1c"}, "conjugate", {"p1c","0.2"});
+action({"Rel2c"}, "conjugate", {"p2c","0.2"});
+action({"Rel3c"}, "conjugate", {"p3c","0.2"});
+
+
+action({"siop1","siop2","siop3"},"paint",{"255","0","0","0"});
+
+
+action({"LuxI"},"s_emit_signal",{tostring(echo),"0.1","exact"});
+
+//lv1-0.005; lv2-0.03; Increace-1.0
+action({}, "s_get_QS", {tostring(echo), ">", "1.0", "inup"});
+
+
+action({},"set_growth_rate",{"0.001"});
+action({"up","siop1","siop2","siop3"},"set_growth_rate",{"1.0"});
+
+
+fp := fopen ("C:\Users\Tatan\mail.udp.cl\Memoria_02_2022 - Documentos\datos-oopp\datosooppF2_3.csv", "w");
+//fp := fopen ("C:\Users\vm\Documents\1.csv", "w");
+
+//cambiar ruta para video
+//route2 := "C:\Users\vm\Pictures\";
+route2 := "C:\Users\Tatan\mail.udp.cl\Memoria_02_2022 - Documentos\Fase2_OOPP\FIJI_AVI_OOPP_3_o\";
+
+//Programs
+program p() :=
+{
+	skip();
+};
+
+program main() := {
+	
+    t = 0:
+    {
+        // Encabezado del archivo csv
+        fprint(fp, "Time, Siop1, Siop2, Siop3, Total\n");
+    }
+
+    t1 > 250 : 
+	{ 
+        //Con esto se graba la imagen cada 5 minutos simulados
+    	snapshot ( route2 <> "pic" <> tostring(n) <> ".tif" ),
+    	n := n + 1,
+    	t1 := 0
+  	}
+
+    //ESTO ES PARA DETENER LA SIMULACION POR TIEMPO. Por los tiempos que se manejan, no es recomendable.
+    /*t > 250:
+    {
+        stop();
+    }*/
+
+	true: 
+	{ 
+        /*Aqui se mandan los datos al csv indicado arriba. Ojo con que en cada run se pisa el archivo anterior si 
+        es que no se cambia el nombre de el.*/
+        dump_multiple(fp,{"siop1"},{"siop2"},{"siop3"},{}); //MULTIPLE MODE
+		t := t + dt;
+        t1 := t1 + dt;
+	}	
+
+	
+	c_ecolis(100, 0, 0, 400, {"p1a"}, program p());
+    c_ecolis(100, 0, 0, 400, {"p2a"}, program p());
+    c_ecolis(100, 0, 0, 400, {"p3a"}, program p());
+	c_ecolis(100, 0, 0, 400, {"p1b"}, program p());
+    c_ecolis(100, 0, 0, 400, {"p2b"}, program p());
+    c_ecolis(100, 0, 0, 400, {"p3b"}, program p());
+	c_ecolis(100, 0, 0, 400, {"p1c"}, program p());
+    c_ecolis(100, 0, 0, 400, {"p2c"}, program p());
+    c_ecolis(100, 0, 0, 400, {"p3c"}, program p());
+	c_ecolis(200, 0, 0, 400, {}, program p());
+
+	//fiji para el video
+};
